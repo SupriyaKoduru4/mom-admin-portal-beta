@@ -15,6 +15,7 @@ function SubForms() {
   }, []);
 
   const fetchCategories = async () => {
+    setLoading(true);
     try {
       const response = await fetch('http://localhost:3000/api/medicines/categories');
       if (response.ok) {
@@ -25,6 +26,9 @@ function SubForms() {
       }
     } catch (error) {
       console.error('Error fetching categories:', error);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -92,6 +96,14 @@ function SubForms() {
                 <h2 className="leading-relaxed">Add SubCategory</h2>
               </div>
             </div>
+
+            {loading && (
+              <div className="absolute inset-0 bg-gray-100 bg-opacity-75 flex items-center justify-center z-10">
+                <div className="text-teal-600 font-semibold">Submitting...</div>
+              </div>
+            )}
+
+      
             <form onSubmit={handleSubmit} className="divide-y divide-gray-200">
               <div className="py-8 text-base leading-6 space-y-4 text-gray-700 sm:text-lg sm:leading-7">
 
@@ -158,6 +170,7 @@ function SubForms() {
                 </button>
               </div>
             </form>
+        
           </div>
         </div>
       </div>

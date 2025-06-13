@@ -1,5 +1,5 @@
 import { Stack, TextField, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import SubReusableTable from "../../components/TableComponent/SubTableComponent";
 import * as React from "react";
 import { useState, useEffect } from "react";
@@ -8,7 +8,7 @@ import DeleteAlert from "../../components/Medicines/Deletealert";
 const columns = [
   { id: "_id", label: "Sub-Category ID", minWidth: 70 },
   { id: 'imageUrl', label: 'Image', minWidth: 100 },
-  { id: "subcategory_name", label: "Sub-Category", minWidth: 100 },
+  { id: "subcategory_name", label: "Name", minWidth: 100 },
 ];
 
 function CategoryHeader({ searchValue, onSearchChange }) {
@@ -121,37 +121,31 @@ function SubCategories() {
   };
 
   const handleEditSave = async (id, updatedData) => {
-
-
-     const fd = new FormData();
-    Object.entries(formData).forEach(([k, v]) => {
+    const fd = new FormData();
+    Object.entries(updatedData).forEach(([k, v]) => {
       if (k === "imageFile") {
-        if (v) fd.append("imageUrl", v);
+        if (v) fd.append("imageUrl", v); 
       } else {
         fd.append(k, v);
       }
     });
-
+  
     try {
       const response = await fetch(
         `http://localhost:3000/api/medicines/subcategories/${id}`,
         {
           method: "PUT",
-          body: fd
+          body: fd,
         }
       );
   
       if (response.ok) {
-          const data = await response.json();
+        const data = await response.json();
         setSubCategories((prev) =>
-          prev.map((item) =>
-            item._id === id ? { ...item, ...data } : item
-          )
+          prev.map((item) => (item._id === id ? { ...item, ...data } : item))
         );
         setFilteredSubCategories((prev) =>
-          prev.map((item) =>
-            item._id === id ? { ...item, ...data } : item
-          )
+          prev.map((item) => (item._id === id ? { ...item, ...data } : item))
         );
       } else {
         alert("Failed to update sub-category");
@@ -160,7 +154,7 @@ function SubCategories() {
       alert("Error updating sub-category");
     }
   };
-
+  
 
 
   return (
